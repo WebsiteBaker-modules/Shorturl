@@ -1,0 +1,20 @@
+RewriteEngine On
+
+## make google_sitemap.php visible as sitemap.xml
+RewriteRule ^sitemap.xml$ /google_sitemap.php [L]
+
+## uncomment (remove #) the next three lines to rewrite host to include www
+#RewriteCond %{HTTP_HOST} !^www\.               [NC]
+#RewriteCond %{HTTP_HOST} ^([^.]+\.[a-z]{2,6})$ [NC]
+#RewriteRule ^(.*)$       http://www.%1/$1      [R=301,L]
+
+## If old url's are called directly - redirect to short url version
+RewriteCond %{REQUEST_URI} !/pages/intro.php
+RewriteCond %{REQUEST_URI} /pages
+RewriteRule ^pages/(.*).php$ /$1/ [R=301,L]
+
+## Send the request to the short.php for processing
+RewriteCond %{REQUEST_URI} !^/(pages|admin|framework|include|languages|media|account|search|temp|templates/.*)$
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([\/\sa-zA-Z0-9._-]+)$ /short.php?_wb=$1 [QSA,L]
